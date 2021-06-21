@@ -2,7 +2,7 @@
 photo sphere viewer django bootstrap5
 
 This is a simple django and photo-sphereviwer and Bootstrap5 web app project that has the fullowing features
-1. you can upload the title and a panaromic image using add room, and it will give a sphere view.
+1. you can upload the title and a panaromic image using add room, and it will give a sphere view of panoromic image.
 2. Using add component on each items that have been added using 'Add Room' you can add marker on an specific 
    Longitude and Latitude which by double clicking on it, the current image will change to the image which is linked to the marker.
 
