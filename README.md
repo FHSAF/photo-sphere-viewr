@@ -12,8 +12,8 @@ This is how you can run the project:
       - virtualenv environment_name
       - .\environment_name\Scripts\activate (optional) note: use forward slahs (/) if you are on linux.
       - pip install -r requirements.txt
-      - python manage.py migrate
       - python manage.py makemigrations
+      - python manage.py migrate
       - python manage.py createsuperuser
 
 To start the project simply copy and paste the url bellow on your browser
