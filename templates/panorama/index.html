@@ -1,0 +1,104 @@
+{% extends 'base.htm' %}
+{% block content %}
+<div class="content">
+    <div class="row">
+    {% for room in rooms %}
+        <div class="col-md-6">
+            <div class="card">
+                <div id="viewer{{ room.id }}" class="viewer"></div>
+                <script>
+                    var marker{{room.id}} = [];
+                    {% for component in components %}
+                        if ({{component.room.id}} == {{room.id}} ){
+                            marker{{room.id}}.push({
+                                id: 'image{{forloop.counter}}',
+                                longitude: {{ component.longitude }},
+                                latitude: {{ component.latitude }},
+                                image: 'https://photo-sphere-viewer.js.org/assets/pin-red.png',
+                                width: 60,
+                                height: 60,
+                                anchor: 'bottom center',
+                                tooltip: '{{ component.title }} {{component.latitude}} {{ component.longitude }} <b>Double click to go!</b>',
+                            })
+                        }
+                    {% endfor %}
+                    console.log(marker{{room.id}})
+                    var viewer{{room.id}} = new PhotoSphereViewer.Viewer({
+                        container: document.querySelector('#viewer{{ room.id }}'),
+                        panorama: '{{ room.image.url }}',
+                        loadingImg: 'https://photo-sphere-viewer.js.org/assets/photosphere-logo.gif',
+                        caption: '{{room.title}}</b>',
+                        defaultLat: 0.3,
+                        touchmoveTwoFingers: true,
+                        mousewheelCtrlKey: true,
+                
+
+                        plugins: [
+                                    [PhotoSphereViewer.MarkersPlugin, {
+                                        markers: marker{{room.id}}
+                                        }
+                                    ]
+                                ]
+
+                                });
+                                var markersPlugin = viewer{{room.id}}.getPlugin(PhotoSphereViewer.MarkersPlugin);
+                                
+                                markersPlugin.on('select-marker', function (e, marker, data) {
+                                        if (data.dblclick) {
+                                            {% for component in components %}
+                                                if ({{component.latitude}} == marker.config.latitude){
+                                                viewer{{room.id}}.setPanorama('{{component.image.url}}');
+                                                viewer{{room.id}}.setOption('caption', '{{component.title}}');}
+                                            {% endfor %}
+                                            
+                                        }
+                                });
+                </script>
+                <div class="card-body">
+                    <h5 class="card-title">{{ room.title }}</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="{% url 'add-component' room.id %}" class="btn btn-primary">Add Component</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+<div class="content">
+    <div class="row">
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog m-width">
+                <div class="modal-content mc-width">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Adding Room</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                            {% comment %} <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Title</span>
+                                <input type="text" name="title" class="form-control" placeholder="title"
+                                    aria-label="Title" aria-describedby="basic-addon1">
+                            </div>
+
+
+                            <div class="input-group mb-3">
+                                <input name="image" type="file" class="form-control" id="inputGroupFile02">
+                                <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                            </div> {% endcomment %}
+                            {{ form.as_p }}
+
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% for room in rooms %}
+    
+{% endfor %}
+{% endblock %}
